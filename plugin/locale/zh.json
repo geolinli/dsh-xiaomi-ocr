@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "本地 OCR（Xiaomi-OCR-0）",
+    "description": "小米 0.8B 文档解析模型，完全离线：整页转 Markdown（表格 OTSL、公式 LaTeX）、票据字段抽取 JSON、文档问答。首次调用加载模型约 7 秒，4GB 显存可跑。"
+  }
+}

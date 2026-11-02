@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Local OCR (Xiaomi-OCR-0)",
+    "description": "Xiaomi's 0.8B document model, fully offline: page to Markdown (OTSL tables, LaTeX formulas), key-field JSON for receipts, and document Q&A. First call loads the model (~7s); fits in 4GB VRAM."
+  }
+}

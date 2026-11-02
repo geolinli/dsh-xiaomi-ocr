@@ -1,0 +1,22 @@
+{
+  "name": "@local/dsh-xiaomi-ocr",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Xiaomi-OCR-0 document OCR through MCP: markdown parsing, key-field JSON and VQA, fully offline.",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

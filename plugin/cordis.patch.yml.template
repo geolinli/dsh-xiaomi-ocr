@@ -1,0 +1,26 @@
+# Bundle patch template. install.ps1 / install.sh rewrite it with your absolute
+# paths and write the result to plugin/cordis.patch.yml (which is gitignored).
+#
+# The row is a standard @deepseek-ai/dsh-mcp-client entry: Harness spawns the local
+# MCP server over stdio and publishes its tools as mcp__xiaomi_ocr__*.
+- insert:
+    - id: mcp-xiaomi-ocr
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: xiaomi_ocr
+        transport: stdio
+        command: '{{PYTHON}}'
+        args:
+          - '{{SERVER}}'
+        cwd: '{{ROOT}}'
+        toolCallTimeoutMs: 900000
+        env:
+          XIAOMI_OCR_DEVICE: cuda
+          XIAOMI_OCR_MAX_SIDE: '1536'
+          XIAOMI_OCR_TOKEN_BUDGET: '1200'
+          XIAOMI_OCR_IDLE_UNLOAD_S: '120'
+          XIAOMI_OCR_HOLD_S: '600'
+          XIAOMI_OCR_SINGLE_RELEASE: '1'
+          XIAOMI_OCR_EXIT_IDLE_S: '600'
+          TMP: '{{ROOT}}\tmp'
+          TEMP: '{{ROOT}}\tmp'
