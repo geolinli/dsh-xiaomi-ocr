@@ -62,7 +62,7 @@ if [[ $RENDER_ONLY -eq 0 ]]; then
         "$VENVPY" -m pip install "torch==2.14.0" "torchvision==0.29.0"
       }
   fi
-  "$VENVPY" -m pip install "transformers==5.17.0" pillow accelerate mcp pymupdf
+  "$VENVPY" -m pip install "transformers==5.17.0" pillow accelerate mcp pypdfium2
   ok "dependencies installed"
 
   if [[ $SKIP_MODEL -eq 0 ]]; then

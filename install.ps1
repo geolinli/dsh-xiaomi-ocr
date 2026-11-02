@@ -77,7 +77,7 @@ if ($RenderOnly) {
             & $VenvPy -m pip install "torch==2.14.0" "torchvision==0.29.0"
         }
     }
-    & $VenvPy -m pip install "transformers==5.17.0" pillow accelerate mcp pymupdf
+    & $VenvPy -m pip install "transformers==5.17.0" pillow accelerate mcp pypdfium2
     if ($LASTEXITCODE -ne 0) { throw "dependency install failed" }
     OkMsg "dependencies installed"
 

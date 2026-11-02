@@ -20,6 +20,8 @@ bash install.sh
 
 装完重启 Harness → 左侧 **Plugins → Add plugin** → 填终端打印的那个目录路径 → 出现「本地 OCR（Xiaomi-OCR-0）」卡片，默认开启。
 
+> **非官方项目**：与小米、DeepSeek 无隶属或背书关系。模型权重 Apache-2.0（不随本仓库分发，安装时下载），依赖清单与合规说明见 [THIRD_PARTY.md](THIRD_PARTY.md)。
+
 ---
 
 ## 为什么值得装
@@ -162,11 +164,28 @@ Windows 上没有 `causal_conv1d` / `flash-linear-attention` 内核，18 层线�
 **Q: 怎么彻底卸载？**
 Plugins 里移除卡片，然后删掉这个目录、以及 profile 里 `cordis.patch.yml` 的相关行。
 
-## 许可
+## 许可与合规
 
-- 本仓库代码：MIT
-- 模型权重：[xiaomi-research/Xiaomi-OCR-0](https://huggingface.co/xiaomi-research/Xiaomi-OCR-0)，Apache-2.0（小米研究院）
-- 版面模型（可选，未集成）：PP-DocLayoutV3，Apache-2.0
+| 对象 | 许可 |
+| --- | --- |
+| 本仓库代码 | **MIT**（见 [LICENSE](LICENSE)） |
+| Xiaomi-OCR-0 权重 | **Apache-2.0**（小米研究院，安装时从 HF/镜像下载） |
+| 上游基座 Qwen3.5-0.8B-Base | **Apache-2.0** |
+| PDF 渲染 | **pypdfium2**（PDFium，Apache-2.0/BSD-3-Clause） |
+
+几个刻意的选择：
+
+- **不打包权重**：仓库里没有 1.7GB 权重，安装器按需下载。这样既避免再分发的声明义务，也让权重始终跟随上游更新。
+- **不用 PyMuPDF**：它虽然好用，但许可是 **AGPL-3.0**，对"通过网络提供服务"有传染性要求，不适合作为默认依赖推荐给他人。已换成 pypdfium2。
+- **不复制第三方代码**：所有依赖都通过 pip 安装，仓库只含本项目自己的 MIT 代码。
+
+使用前请注意：
+
+- 模型成绩来自小米官方模型卡的自测，**未经独立复现**；Real5 的"第一"存在评测口径争议，选型请用自己数据实测。
+- 模型会输出识别错误，合同/票据/证件场景请保留人工复核。
+- 缓存（`tmp/cache/`）是**明文 JSON** 且留在本机，处理敏感材料后请清理该目录。
+
+完整依赖与许可清单见 [THIRD_PARTY.md](THIRD_PARTY.md)。
 
 ## English quick start
 
