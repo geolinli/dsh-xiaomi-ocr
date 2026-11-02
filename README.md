@@ -69,10 +69,12 @@ bash install.sh
 
 | 调用形态 | 结束动作 | 实测 |
 | --- | --- | --- |
-| 单图（默认 `hold=false`） | **立刻卸载** | 1957 MiB → 139 MiB |
-| 批量 / PDF（默认 `hold=true`） | 保持 600s | `held_seconds_left: 598.9` |
-| 空闲 600s（`EXIT_IDLE_S`） | 进程退出，内存归零 | 连 3.6GB 常驻内存一起还 |
-| 显式 `model_release` | 立即 | 139 MiB |
+| 默认（所有工具 `hold=false`） | **立刻卸载** | 1957 MiB → 141 MiB |
+| 显式 `hold=true` | 保持 `XIAOMI_OCR_HOLD_S`（600s），期间连续调用不再付 7s 加载 | `held_seconds_left: 598.9` |
+| 闲置 `EXIT_IDLE_S`（600s） | 进程退出，连 3.6GB 常驻内存一起还 | RSS 归零 |
+| 显式 `model_release` | 立即 | 141 MiB |
+
+多页作业不需要 `hold`：`ocr_batch` / `ocr_pdf` 在**一次调用内**就处理完全部页面，返回时即释放；`hold=true` 只在"我要接着发好几次独立请求"时才有意义（我根据上下文决定）。
 
 `model_status` 会直接告诉你原因：`retention: "released (single-shot)"` / `"held 600s after last call"`。
 

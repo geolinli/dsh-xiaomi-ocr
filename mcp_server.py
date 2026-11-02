@@ -476,14 +476,15 @@ def vqa_image(image_path: str, question: str, detail: str = "brief",
 
 
 @mcp.tool()
-def ocr_batch(paths: list[str], intent: str = "text", detail: str = "brief", hold: bool = True) -> str:
+def ocr_batch(paths: list[str], intent: str = "text", detail: str = "brief", hold: bool = False) -> str:
     """OCR several images in one call (serial, cached). Returns one section per file.
 
     Args:
         paths: list of absolute or project-relative image paths
         intent: text (default), markdown, table or formula
-        hold: keep the model resident for XIAOMI_OCR_HOLD_S after the batch (default true —
-              a batch means more work is likely); false releases VRAM when the batch ends
+        hold: keep the model resident for XIAOMI_OCR_HOLD_S after the batch. Default false —
+              the whole batch already runs inside this one call, so VRAM is released when it
+              returns. Pass true only when you know more calls follow immediately.
     """
     intent = intent if intent in PROMPTS else "text"
     out: list[str] = []
@@ -506,7 +507,7 @@ def ocr_batch(paths: list[str], intent: str = "text", detail: str = "brief", hol
 
 @mcp.tool()
 def ocr_pdf(pdf_path: str, pages: str = "", detail: str = "brief", dpi: int = 150,
-            max_pages: int = 5, hold: bool = True) -> str:
+            max_pages: int = 5, hold: bool = False) -> str:
     """Parse a PDF page by page. Defaults to the first 5 pages — ask for more explicitly.
 
     Args:
@@ -515,15 +516,18 @@ def ocr_pdf(pdf_path: str, pages: str = "", detail: str = "brief", dpi: int = 15
         detail: brief / full
         dpi: render resolution (150 is enough for 1280px long edge)
         max_pages: hard cap when pages is empty
-        hold: keep the model resident after the job (default true for multi-page work)
+        hold: keep the model resident after this job; default false because all pages are
+              processed inside this call, so VRAM is released on return
     """
     try:
-        import fitz  # PyMuPDF
+        import pypdfium2 as pdfium  # BSD-3-Clause / Apache-2.0 (PDFium); avoids AGPL PyMuPDF
     except ImportError:
-        return "ERROR: PyMuPDF is not installed; install 'pymupdf' or OCR page images individually."
+        return ("ERROR: pypdfium2 is not installed. Install it with "
+                "`pip install pypdfium2`, or OCR page images individually with ocr_image.")
 
     src = _resolve(pdf_path)
-    doc = fitz.open(src)
+    doc = pdfium.PdfDocument(src)
+    total = len(doc)
     wanted: list[int] = []
     if pages.strip():
         for part in pages.split(","):
@@ -536,26 +540,30 @@ def ocr_pdf(pdf_path: str, pages: str = "", detail: str = "brief", dpi: int = 15
             else:
                 wanted.append(int(part))
     else:
-        wanted = list(range(1, min(doc.page_count, max_pages) + 1))
+        wanted = list(range(1, min(total, max_pages) + 1))
 
     out: list[str] = []
     with _lock:
         _state["pins"] += 1
     try:
         for num in wanted:
-            if num < 1 or num > doc.page_count:
+            if num < 1 or num > total:
                 continue
-            pix = doc.load_page(num - 1).get_pixmap(dpi=dpi)
+            page = doc[num - 1]
+            bitmap = page.render(scale=dpi / 72)
+            image = bitmap.to_pil().convert("RGB")
             tmp = os.path.join(ROOT, "tmp", f"_page_{num}.png")
             os.makedirs(os.path.dirname(tmp), exist_ok=True)
-            pix.save(tmp)
+            image.save(tmp)
             text, meta = _task(tmp, PROMPT_MARKDOWN, detail, 0, 1024 if detail != "full" else 2560, post="otsl")
             out.append(f"## Page {num}\n\n{text}\n\n<!-- {json.dumps(meta, ensure_ascii=False)} -->")
     finally:
         with _lock:
             _state["pins"] -= 1
-    total = doc.page_count
-    doc.close()
+        try:
+            doc.close()
+        except Exception:  # noqa: BLE001
+            pass
     retention = _settle(hold)
     head = f"<!-- {total} pages total; parsed {len(out)}; retention: {retention} -->\n\n" if out else ""
     return head + "\n\n".join(out) if out else "ERROR: no pages selected."
