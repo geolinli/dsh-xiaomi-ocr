@@ -35,7 +35,7 @@ bash install.sh
 
 ```
 PASTE THIS PLUGIN DIRECTORY INTO HARNESS (Plugins -> Add plugin):
-    F:\harness\work\somethingfun\dsh-xiaomi-ocr\plugin
+    D:\tools\dsh-xiaomi-ocr\plugin
 ```
 
 ### 3. 在 Harness 里登记插件
@@ -47,7 +47,7 @@ PASTE THIS PLUGIN DIRECTORY INTO HARNESS (Plugins -> Add plugin):
 
    | 系统 | 粘贴内容示例 |
    | --- | --- |
-   | Windows | `F:\harness\work\somethingfun\dsh-xiaomi-ocr\plugin` |
+   | Windows | `D:\tools\dsh-xiaomi-ocr\plugin` |
    | Linux | `/home/you/dsh-xiaomi-ocr/plugin` |
    | macOS | `/Users/you/dsh-xiaomi-ocr/plugin` |
 

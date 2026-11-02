@@ -35,7 +35,7 @@ It ends with something like:
 
 ```
 PASTE THIS PLUGIN DIRECTORY INTO HARNESS (Plugins -> Add plugin):
-    F:\harness\work\somethingfun\dsh-xiaomi-ocr\plugin
+    D:\tools\dsh-xiaomi-ocr\plugin
 ```
 
 ### 3. Register the plugin in Harness
@@ -47,7 +47,7 @@ PASTE THIS PLUGIN DIRECTORY INTO HARNESS (Plugins -> Add plugin):
 
    | OS | What to paste |
    | --- | --- |
-   | Windows | `F:\harness\work\somethingfun\dsh-xiaomi-ocr\plugin` |
+   | Windows | `D:\tools\dsh-xiaomi-ocr\plugin` |
    | Linux | `/home/you/dsh-xiaomi-ocr/plugin` |
    | macOS | `/Users/you/dsh-xiaomi-ocr/plugin` |
 
