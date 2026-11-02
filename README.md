@@ -179,4 +179,4 @@ Plugins 里移除卡片，再删掉仓库目录。
 | 上游基座 Qwen3.5-0.8B-Base | Apache-2.0 |
 | PDF 渲染 | pypdfium2（PDFium，Apache-2.0 / BSD-3-Clause） |
 
-刻意不用 PyMuPDF（AGPL-3.0）；不打包权重（避免再分发声明义务）；不含第三方代码。完整清单见 [THIRD_PARTY.md](THIRD_PARTY.md)。
+完整清单见 [THIRD_PARTY.md](THIRD_PARTY.md)。
