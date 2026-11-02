@@ -93,13 +93,17 @@ cat <<EOF
 Next steps
 ============================================================
 1. Restart DeepSeek Harness.
-2. Sidebar -> Plugins -> Add plugin -> paste:
+1) Restart DeepSeek Harness.
+2) Sidebar -> Plugins -> "Add plugin".
+3) Paste THIS path (the plugin subdirectory, not the repo root):
 
-   $ROOT/plugin
+   PASTE THIS PLUGIN DIRECTORY INTO HARNESS (Plugins -> Add plugin):
+       $ROOT/plugin
 
-3. The card "Local OCR (Xiaomi-OCR-0)" appears, switched on.
+   That directory contains package.json and cordis.patch.yml.
+4) Click Install. The card "Local OCR (Xiaomi-OCR-0)" appears, switched on.
 
-Optional smoke test before wiring Harness:
+Optional smoke test before wiring Harness (loads the model once):
 
    $VENVPY $ROOT/smoke_test.py
 EOF
